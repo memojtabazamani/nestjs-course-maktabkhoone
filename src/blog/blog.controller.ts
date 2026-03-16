@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { BlogDto } from './dtos/blog.dto';
 
 @ApiTags('Blog')
 @Controller('blog')
@@ -20,13 +21,13 @@ export class BlogController {
   }
 
   @Post()
-  create(@Body('title') body) {
+  create(@Body() body: BlogDto) {
     console.log(body);
     return 'Create Blog';
   }
 
   @Patch(':id')
-  update(@Param("id") id: string, @Body() body) {
+  update(@Param('id') id: string, @Body() body: BlogDto) {
     console.log(id, body);
     return 'Update Blog';
   }
