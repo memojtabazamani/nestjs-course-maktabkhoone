@@ -8,7 +8,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 // Decorator
 @Module({
-  imports: [BlogModule, MongooseModule.forRoot("")],
+  imports: [
+    BlogModule,
+    MongooseModule.forRoot(
+      'mongodb://admin:zcHDHqpv9u4JO8nLXtyt@remote-pishgaman.runflare.com:30915/admin',
+    ),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
