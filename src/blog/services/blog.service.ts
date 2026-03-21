@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { BlogDto } from './dtos/blog.dto';
+import { BlogDto } from '../dtos/blog.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Blog } from '../blog-schema';
+import { Blog } from '../schemas/blog-schema';
 import { Model } from 'mongoose';
-import { BlogQueryDto, Sort } from './dtos/blog-query.dto';
-import { sortFunction } from '../shared/utils/sort-utils';
+import { BlogQueryDto, Sort } from '../dtos/blog-query.dto';
+import { sortFunction } from '../../shared/utils/sort-utils';
 
 @Injectable()
 export class BlogService {
@@ -29,6 +29,9 @@ export class BlogService {
     const sortObject = sortFunction(sort);
     const blogs = await this.blogModel
       .find(query)
+      .populate('category', {
+        title: true,
+      })
       .skip(page - 1)
       .sort(sortObject)
       .select(selectObject)
@@ -51,6 +54,9 @@ export class BlogService {
   ) {
     const blog = await this.blogModel
       .findOne({ _id: id })
+      .populate('category', {
+        title: true,
+      })
       .select(selectObject)
       .exec();
     if (!blog) {
@@ -66,14 +72,17 @@ export class BlogService {
   }
 
   async update(id: string, body: BlogDto) {
-    const blog = await this.findOne(id, { title: true, content: true });
-    if (!blog) {
-      throw new NotFoundException();
-    }
-    blog.title = body.title;
-    blog.content = body.content;
-    await blog.save();
-    return blog;
+    return await this.blogModel.findByIdAndUpdate(id, body, {
+      new: true,
+    });
+    // const blog = await this.findOne(id, { title: true, content: true });
+    // if (!blog) {
+    //   throw new NotFoundException();
+    // }
+    // blog.title = body.title;
+    // blog.content = body.content;
+    // await blog.save();
+    // return blog;
   }
 
   async delete(id: string) {
