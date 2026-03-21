@@ -3,7 +3,9 @@ import { BlogDto } from './dtos/blog.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog } from '../blog-schema';
 import { Model } from 'mongoose';
-import { BlogQueryDto } from './dtos/blog-query.dto';
+import { BlogQueryDto, Sort } from './dtos/blog-query.dto';
+import { sortFunction } from '../shared/utils/sort-utils';
+
 @Injectable()
 export class BlogService {
   constructor(
@@ -12,18 +14,18 @@ export class BlogService {
 
   async findAll(queryParams: BlogQueryDto) {
     const { limit = 10, page = 1, title } = queryParams;
-
-    // const pageNum = Number(page) || 1;
-    // const limitNum = Number(limit) || 10;
-
     const query: any = {};
-
     if (title) {
       query.title = { $regex: title, $options: 'i' };
     }
+    let sort: Sort | undefined = queryParams.sort;
+
+    // now supports undefined safely
+    const sortObject = sortFunction(sort);
     const blogs = await this.blogModel
       .find(query)
       .skip(page - 1)
+      .sort(sortObject)
       .limit(limit)
       .exec();
 
