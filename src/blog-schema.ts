@@ -1,6 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-@Schema()
+@Schema({
+  timestamps: true,
+})
 export class Blog extends Document {
   @Prop()
   title: string;
