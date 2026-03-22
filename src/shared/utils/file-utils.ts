@@ -13,7 +13,7 @@ export const saveImage = async (
     d.getMinutes() +
     d.getMilliseconds() +
     '-' +
-    file.originalname.split('.')[0];
+    file.originalname.split('.')[0] + ".webp";
 
   mkdirp.sync(destPath + '/main');
   mkdirp.sync(destPath + '/resized');
