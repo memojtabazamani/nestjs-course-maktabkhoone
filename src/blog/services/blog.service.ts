@@ -5,6 +5,7 @@ import { Blog } from '../schemas/blog-schema';
 import { Model } from 'mongoose';
 import { BlogQueryDto, Sort } from '../dtos/blog-query.dto';
 import { sortFunction } from '../../shared/utils/sort-utils';
+import { deleteImage } from '../../shared/utils/file-utils';
 
 @Injectable()
 export class BlogService {
@@ -72,24 +73,24 @@ export class BlogService {
   }
 
   async update(id: string, body: BlogDto) {
-    return await this.blogModel.findByIdAndUpdate(id, body, {
-      new: true,
-    });
-    // const blog = await this.findOne(id, { title: true, content: true });
-    // if (!blog) {
-    //   throw new NotFoundException();
-    // }
-    // blog.title = body.title;
-    // blog.content = body.content;
-    // await blog.save();
-    // return blog;
-  }
-
-  async delete(id: string) {
-    const blog = await this.findOne(id, { __id: true });
+    const blog = await this.findOne(id, { __id: true, image: 1 });
     if (!blog) {
       throw new NotFoundException();
     }
+    if (blog.image !== body.image) {
+      await deleteImage(blog.image, 'blog');
+    }
+    return await this.blogModel.findByIdAndUpdate(id, body, {
+      new: true,
+    });
+  }
+
+  async delete(id: string) {
+    const blog = await this.findOne(id, { __id: true, image: 1 });
+    if (!blog) {
+      throw new NotFoundException();
+    }
+    await deleteImage(blog.image, 'blog');
     await blog.deleteOne();
   }
 }
