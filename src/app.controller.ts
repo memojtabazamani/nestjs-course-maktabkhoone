@@ -11,11 +11,12 @@ import {
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { ApiConsumes } from '@nestjs/swagger';
+import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { UploadFileDto } from './shared/dtos/upload-file.dto';
 import { saveImage, saveImages } from './shared/utils/file-utils';
 import { UploadFilesDto } from './shared/dtos/upload-files.dto';
 
+@ApiTags('Shared')
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
