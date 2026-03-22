@@ -1,6 +1,7 @@
 import sharp from 'sharp';
 import { mkdirp } from 'mkdirp';
 import { UploadFileDto } from '../dtos/upload-file.dto';
+import { UploadFilesDto } from '../dtos/upload-files.dto';
 
 export const saveImage = async (
   file: Express.Multer.File,
@@ -13,7 +14,8 @@ export const saveImage = async (
     d.getMinutes() +
     d.getMilliseconds() +
     '-' +
-    file.originalname.split('.')[0] + ".webp";
+    file.originalname.split('.')[0] +
+    '.webp';
 
   mkdirp.sync(destPath + '/main');
   mkdirp.sync(destPath + '/resized');
@@ -30,4 +32,39 @@ export const saveImage = async (
     .toFile(destPath + '/resized/' + fileName);
 
   return fileName;
+};
+
+export const saveImages = async (
+  files: Array<Express.Multer.File>,
+  body: UploadFilesDto,
+) => {
+  const destPath = 'files/' + body.folder;
+  mkdirp.sync(destPath + '/main');
+  mkdirp.sync(destPath + '/resized');
+  const fileNames: string[] = [];
+  for await (const file of files) {
+    const d = new Date();
+    const fileName: string =
+      d.getHours() +
+      d.getMinutes() +
+      d.getMilliseconds() +
+      '-' +
+      file.originalname.split('.')[0] +
+      '.webp';
+
+    await sharp(file.buffer)
+      .webp()
+      .toFile(destPath + '/main/' + fileName);
+    await sharp(file.buffer)
+      .resize({
+        width: body.width || 200,
+        height: body.height || 200,
+      })
+      .webp()
+      .toFile(destPath + '/resized/' + fileName);
+
+    fileNames.push(fileName);
+  }
+
+  return fileNames;
 };
