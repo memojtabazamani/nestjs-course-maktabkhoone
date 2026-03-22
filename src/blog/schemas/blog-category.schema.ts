@@ -10,6 +10,8 @@ export class BlogCategory extends Document {
   title: string;
   @Prop()
   content: string;
+  @Prop()
+  image: string;
 }
 
 export const blogCategorySchema = SchemaFactory.createForClass(BlogCategory);

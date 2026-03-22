@@ -7,4 +7,7 @@ export class BlogCategoryDto {
   @IsString()
   @IsNotEmpty()
   content: string;
+  @IsString()
+  @IsNotEmpty()
+  image: string;
 }

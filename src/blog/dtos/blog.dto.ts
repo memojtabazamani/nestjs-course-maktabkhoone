@@ -12,4 +12,7 @@ export class BlogDto {
   @IsString()
   @IsNotEmpty()
   category: string;
+  @IsString()
+  @IsNotEmpty()
+  image: string;
 }
