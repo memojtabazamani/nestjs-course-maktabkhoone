@@ -8,11 +8,26 @@ export const saveImage = async (
 ) => {
   const destPath = 'files/' + body.folder;
   const d = new Date();
-  const fileName = (d.getHours() + d.getMinutes() + d.getMilliseconds()) + '-' + file.originalname;
+  const fileName =
+    d.getHours() +
+    d.getMinutes() +
+    d.getMilliseconds() +
+    '-' +
+    file.originalname.split('.')[0];
 
-  mkdirp.sync(destPath);
+  mkdirp.sync(destPath + '/main');
+  mkdirp.sync(destPath + '/resized');
 
-  await sharp(file.buffer).toFile(destPath + "/" + fileName);
+  await sharp(file.buffer)
+    .webp()
+    .toFile(destPath + '/main/' + fileName);
+  await sharp(file.buffer)
+    .resize({
+      width: body.width || 200,
+      height: body.height || 200,
+    })
+    .webp()
+    .toFile(destPath + '/resized/' + fileName);
 
   return fileName;
 };
