@@ -68,7 +68,7 @@ export class BlogCategoryService {
     return newCategory;
   }
 
-  async update(id: string, body: BlogDto) {
+  async update(id: string, body: BlogCategoryDto) {
     const blogCategory = await this.findOne(id, { __id: true, image: 1 });
     if (!blogCategory) {
       throw new NotFoundException();

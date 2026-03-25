@@ -8,13 +8,17 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiTags } from '@nestjs/swagger';
 import { BlogDto } from '../dtos/blog.dto';
 import { BlogService } from '../services/blog.service';
 import { BlogQueryDto } from '../dtos/blog-query.dto';
 
 @ApiTags('Blog')
 @Controller('blog')
+@ApiHeader({
+  name: "apikey",
+  description: "API KEY"
+})
 export class BlogController {
   constructor(private readonly blogService: BlogService) {}
   @Get()
