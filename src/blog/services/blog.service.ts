@@ -25,7 +25,6 @@ export class BlogService {
       query.title = { $regex: title, $options: 'i' };
     }
     let sort: Sort | undefined = queryParams.sort;
-    console.log('service');
     // now supports undefined safely
     const sortObject = sortFunction(sort);
     const blogs = await this.blogModel

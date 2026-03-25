@@ -81,11 +81,13 @@ export class BlogCategoryService {
     });
   }
   async delete(id: string) {
-    const blogCategory = await this.findOne(id, { __id: true, image: 1 });
+    const blogCategory = await this.findOne(id);
     if (!blogCategory) {
       throw new NotFoundException();
     }
     await deleteImage(blogCategory.image, 'blogCategory');
     await blogCategory.deleteOne();
+
+    return blogCategory;
   }
 }

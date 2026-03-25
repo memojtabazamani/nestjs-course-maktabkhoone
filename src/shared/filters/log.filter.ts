@@ -29,6 +29,5 @@ export class LogFilter<T extends HttpException> implements ExceptionFilter {
       content: JSON.stringify(exception.getResponse()),
       url: request.url,
     });
-    console.log(exception);
   }
 }

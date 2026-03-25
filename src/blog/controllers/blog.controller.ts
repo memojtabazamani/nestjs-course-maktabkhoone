@@ -23,7 +23,6 @@ export class BlogController {
   constructor(private readonly blogService: BlogService) {}
   @Get()
   findAll(@Query() queryParams: BlogQueryDto) {
-    console.log('controller');
     return this.blogService.findAll(queryParams);
   }
 
