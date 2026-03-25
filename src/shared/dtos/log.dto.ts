@@ -7,4 +7,8 @@ export class LogDto {
   content: string;
   @IsNotEmpty()
   type: LogType;
+
+  @IsNotEmpty()
+  @IsString()
+  url: string;
 }

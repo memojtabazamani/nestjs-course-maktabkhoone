@@ -14,6 +14,7 @@ export class LogFilter<T extends HttpException> implements ExceptionFilter {
   async catch(exception: T, host: ArgumentsHost) {
     const response = host.switchToHttp().getResponse<Response>();
     const status = exception.getStatus();
+    const request = host.switchToHttp().getRequest<Request>();
 
     if (status === 404) {
       response.status(404).send({
@@ -26,6 +27,7 @@ export class LogFilter<T extends HttpException> implements ExceptionFilter {
     await this.appService.log({
       type: LogType.Error,
       content: JSON.stringify(exception.getResponse()),
+      url: request.url,
     });
     console.log(exception);
   }

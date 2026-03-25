@@ -15,14 +15,15 @@ import { BlogQueryDto } from '../dtos/blog-query.dto';
 
 @ApiTags('Blog')
 @Controller('blog')
-@ApiHeader({
-  name: "apikey",
-  description: "API KEY"
-})
+// @ApiHeader({
+//   name: "apikey",
+//   description: "API KEY"
+// })
 export class BlogController {
   constructor(private readonly blogService: BlogService) {}
   @Get()
   findAll(@Query() queryParams: BlogQueryDto) {
+    console.log('controller');
     return this.blogService.findAll(queryParams);
   }
 
