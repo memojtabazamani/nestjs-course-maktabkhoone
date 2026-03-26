@@ -18,5 +18,8 @@ export class GeneralQueryDto {
   title?: string;
   @IsOptional()
   @IsEnum(Sort)
+  // @Transform((val) => {
+  //   // Custome
+  // })
   sort?: Sort;
 }
