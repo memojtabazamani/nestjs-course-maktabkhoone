@@ -9,6 +9,7 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class PasswordPipe implements PipeTransform {
+  constructor(private readonly isNew: boolean) {}
   async transform(value: any, metadata: ArgumentMetadata) {
     if (value?.password) {
       const password = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&^_-]{8,}$/;
@@ -20,14 +21,19 @@ export class PasswordPipe implements PipeTransform {
           `Password must be at least 8 characters long`,
         );
       } else {
-        const salt = await bcrypt.genSalt();
-        const hashPassword = await bcrypt.hash(value.password, salt);
+        if (this.isNew) {
+          // For New Users
 
-        return { ...value, password: hashPassword };
+          const salt = await bcrypt.genSalt();
+          const hashPassword = await bcrypt.hash(value.password, salt);
+
+          return { ...value, password: hashPassword };
+        } else {
+          return value;
+        }
       }
       return value;
     }
-
     return value;
   }
 }

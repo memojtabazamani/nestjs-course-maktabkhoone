@@ -31,7 +31,7 @@ export class UserController {
 
   @Post()
   @UseInterceptors(PasswordInterceptor)
-  create(@Body(FarsiPipe, MobilePipe, PasswordPipe) body: UserDto) {
+  create(@Body(FarsiPipe, MobilePipe, new PasswordPipe(true)) body: UserDto) {
     return this.userService.create(body);
   }
 
@@ -44,7 +44,7 @@ export class UserController {
   @UseInterceptors(PasswordInterceptor)
   update(
     @Param('id') id: string,
-    @Body(FarsiPipe, MobilePipe, PasswordPipe) body: UpdateUserDto,
+    @Body(FarsiPipe, MobilePipe, new PasswordPipe(true)) body: UpdateUserDto,
   ) {
     return this.userService.update(id, body);
   }

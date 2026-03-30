@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { ApiKeyGuard } from './shared/guards/api-key.guard';
 import { IdPipe } from './shared/pipes/id.pipe';
+import { DuplicateFilter } from './shared/filters/duplicate.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -20,8 +21,9 @@ async function bootstrap() {
   );
 
   app.useGlobalPipes(new IdPipe());
+  app.useGlobalFilters(new DuplicateFilter());
   // app.useGlobalGuards(new ApiKeyGuard());
-  const config = new DocumentBuilder().setTitle('Nest App').build();
+  const config = new DocumentBuilder().setTitle('Nest App').addBearerAuth().build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/documentation', app, document);
   await app.listen(process.env.PORT ?? 3000);

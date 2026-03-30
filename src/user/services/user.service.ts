@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../schemas/user.schema';
 import { Model } from 'mongoose';
@@ -6,11 +10,14 @@ import { UserQueryDto } from '../dtos/user-query.dto';
 import { sortFunction } from 'src/shared/utils/sort-utils';
 import { UserDto } from '../dtos/user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
-
+import { AuthDto } from '../dtos/auth.dto';
+import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
+    private readonly jwtService: JwtService,
   ) {}
 
   async findAll(queryParams: UserQueryDto, selectObject: any = { __v: 0 }) {
@@ -67,5 +74,31 @@ export class UserService {
     const user = await this.findOne(id);
     await user.deleteOne();
     return user;
+  }
+
+  async findOneByMobile(mobile: string) {
+    const user = await this.userModel.findOne({ mobile });
+
+    if (user) {
+      return user;
+    } else {
+      throw new NotFoundException();
+    }
+  }
+
+  async signin(body: AuthDto) {
+    const { mobile, password } = body;
+    const user = await this.findOneByMobile(mobile);
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    console.log(password);
+    console.log(user.password);
+    console.log(isPasswordCorrect);
+    if (!isPasswordCorrect) {
+      throw new BadRequestException('Password is incorrect');
+    } else {
+      const payload = { _id: user._id };
+      const token = this.jwtService.sign(payload);
+      return { token };
+    }
   }
 }
