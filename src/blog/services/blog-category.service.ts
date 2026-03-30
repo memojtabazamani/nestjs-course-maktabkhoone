@@ -3,10 +3,11 @@ import { BlogCategory } from '../schemas/blog-category.schema';
 import { BlogCategoryQueryDto } from '../dtos/BlogCategoryQueryDto';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { BlogQueryDto, Sort } from '../dtos/blog-query.dto';
 import { sortFunction } from '../../shared/utils/sort-utils';
 import { BlogDto } from '../dtos/blog.dto';
 import {BlogCategoryDto} from '../dtos/blog-category.dto';
+import { Sort } from '../../shared/dtos/general-query.dto';
+
 import { deleteImage } from '../../shared/utils/file-utils';
 @Injectable()
 export class BlogCategoryService {
