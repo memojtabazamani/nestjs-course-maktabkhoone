@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -17,6 +18,7 @@ import { FarsiPipe } from '../../shared/pipes/farsi.pipe';
 import { MobilePipe } from '../../shared/pipes/mobile.pipe';
 import { PasswordPipe } from '../../shared/pipes/password.pipe';
 import { PasswordInterceptor } from '../../shared/interceptors/password.interceptor';
+import { UpdateUserDto } from '../dtos/update-user.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -38,8 +40,12 @@ export class UserController {
     return this.userService.findOne(id);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() body: UserDto) {
+  @Patch(':id')
+  @UseInterceptors(PasswordInterceptor)
+  update(
+    @Param('id') id: string,
+    @Body(FarsiPipe, MobilePipe, PasswordPipe) body: UpdateUserDto,
+  ) {
     return this.userService.update(id, body);
   }
 

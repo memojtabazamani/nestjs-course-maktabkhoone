@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { UserQueryDto } from '../dtos/user-query.dto';
 import { sortFunction } from 'src/shared/utils/sort-utils';
 import { UserDto } from '../dtos/user.dto';
+import { UpdateUserDto } from '../dtos/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -58,7 +59,7 @@ export class UserService {
     return newUser;
   }
 
-  async update(id: string, body: UserDto) {
+  async update(id: string, body: UpdateUserDto) {
     return await this.userModel.findByIdAndUpdate(id, body, { new: true });
   }
 

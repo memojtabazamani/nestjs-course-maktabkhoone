@@ -7,6 +7,7 @@ import { BlogQueryDto } from '../dtos/blog-query.dto';
 import { sortFunction } from '../../shared/utils/sort-utils';
 import { deleteImage } from '../../shared/utils/file-utils';
 import { Sort } from '../../shared/dtos/general-query.dto';
+import { UpdateBlogDto } from '../dtos/update-blog.dto';
 
 @Injectable()
 export class BlogService {
@@ -72,12 +73,12 @@ export class BlogService {
     return newBlog;
   }
 
-  async update(id: string, body: BlogDto) {
+  async update(id: string, body: UpdateBlogDto) {
     const blog = await this.findOne(id, { __id: true, image: 1 });
     if (!blog) {
       throw new NotFoundException();
     }
-    if (blog.image !== body.image) {
+    if (body?.image) {
       await deleteImage(blog.image, 'blog');
     }
     return await this.blogModel.findByIdAndUpdate(id, body, {

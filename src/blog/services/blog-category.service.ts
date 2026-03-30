@@ -9,6 +9,7 @@ import {BlogCategoryDto} from '../dtos/blog-category.dto';
 import { Sort } from '../../shared/dtos/general-query.dto';
 
 import { deleteImage } from '../../shared/utils/file-utils';
+import { UpdateBlogCategoryDto } from '../dtos/update-blog-category.dto';
 @Injectable()
 export class BlogCategoryService {
   constructor(
@@ -69,12 +70,12 @@ export class BlogCategoryService {
     return newCategory;
   }
 
-  async update(id: string, body: BlogCategoryDto) {
+  async update(id: string, body: UpdateBlogCategoryDto) {
     const blogCategory = await this.findOne(id, { __id: true, image: 1 });
     if (!blogCategory) {
       throw new NotFoundException();
     }
-    if (blogCategory.image !== body.image) {
+    if (body?.image) {
       await deleteImage(blogCategory.image, 'blogCategory');
     }
     return await this.blogCategoryModel.findByIdAndUpdate(id, body, {

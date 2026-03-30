@@ -12,6 +12,7 @@ import { ApiHeader, ApiTags } from '@nestjs/swagger';
 import { BlogDto } from '../dtos/blog.dto';
 import { BlogService } from '../services/blog.service';
 import { BlogQueryDto } from '../dtos/blog-query.dto';
+import { UpdateBlogDto } from '../dtos/update-blog.dto';
 
 @ApiTags('Blog')
 @Controller('blog')
@@ -37,7 +38,7 @@ export class BlogController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() body: BlogDto) {
+  update(@Param('id') id: string, @Body() body: UpdateBlogDto) {
     return this.blogService.update(id, body);
   }
 
