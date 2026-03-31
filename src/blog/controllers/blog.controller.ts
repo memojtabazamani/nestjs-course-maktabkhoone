@@ -15,10 +15,11 @@ import { BlogService } from '../services/blog.service';
 import { BlogQueryDto } from '../dtos/blog-query.dto';
 import { UpdateBlogDto } from '../dtos/update-blog.dto';
 import { JwtGuard } from '../../shared/guards/jwt.guard';
-
+import { User } from '../../shared/decorators/user.decorator';
+import { RoleGuard } from '../../shared/guards/role.guard';
 @ApiTags('Blog')
 @Controller('blog')
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, new RoleGuard([Role.Admin, Role.CopyRighter]))
 @ApiBearerAuth()
 export class BlogController {
   constructor(private readonly blogService: BlogService) {}
@@ -33,8 +34,8 @@ export class BlogController {
   }
 
   @Post()
-  create(@Body() body: BlogDto) {
-    return this.blogService.create(body);
+  create(@Body() body: BlogDto, @User() user: string) {
+    return this.blogService.create(body, user);
   }
 
   @Patch(':id')

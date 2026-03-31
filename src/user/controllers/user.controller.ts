@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -19,9 +20,12 @@ import { MobilePipe } from '../../shared/pipes/mobile.pipe';
 import { PasswordPipe } from '../../shared/pipes/password.pipe';
 import { PasswordInterceptor } from '../../shared/interceptors/password.interceptor';
 import { UpdateUserDto } from '../dtos/update-user.dto';
+import { RoleGuard } from '../../shared/guards/role.guard';
+import { Role } from '../schemas/user.schema';
 
 @ApiTags('User')
 @Controller('user')
+@UseGuards(new RoleGuard([Role.Admin]))
 export class UserController {
   constructor(private readonly userService: UserService) {}
   @Get()

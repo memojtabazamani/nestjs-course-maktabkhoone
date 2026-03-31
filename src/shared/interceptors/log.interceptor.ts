@@ -20,6 +20,7 @@ export class LogInterceptor implements NestInterceptor {
             content: JSON.stringify(res),
             url: request.url,
             type: LogType[request.method],
+            user: request['user']?._id || null,
           });
         }
       }),

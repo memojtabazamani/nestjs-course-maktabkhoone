@@ -21,10 +21,17 @@ export class BlogService {
       __v: false,
     },
   ) {
-    const { limit = 10, page = 1, title } = queryParams;
+    const { limit = 10, page = 1, title, user, category } = queryParams;
     const query: any = {};
     if (title) {
       query.title = { $regex: title, $options: 'i' };
+    }
+
+    if (user) {
+      query.user = user;
+    }
+    if (category) {
+      query.category = category;
     }
     let sort: Sort | undefined = queryParams.sort;
     // now supports undefined safely
@@ -67,8 +74,8 @@ export class BlogService {
     return blog;
   }
 
-  async create(body: BlogDto) {
-    const newBlog = new this.blogModel(body);
+  async create(body: BlogDto, user: string) {
+    const newBlog = new this.blogModel({ ...body, user: user });
     await newBlog.save();
     return newBlog;
   }

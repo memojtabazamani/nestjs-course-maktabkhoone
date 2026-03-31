@@ -90,13 +90,10 @@ export class UserService {
     const { mobile, password } = body;
     const user = await this.findOneByMobile(mobile);
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
-    console.log(password);
-    console.log(user.password);
-    console.log(isPasswordCorrect);
     if (!isPasswordCorrect) {
       throw new BadRequestException('Password is incorrect');
     } else {
-      const payload = { _id: user._id };
+      const payload = { _id: user._id, role: user.role };
       const token = this.jwtService.sign(payload);
       return { token };
     }
