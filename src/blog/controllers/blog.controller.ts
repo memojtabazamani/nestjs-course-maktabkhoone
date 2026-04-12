@@ -17,6 +17,7 @@ import { UpdateBlogDto } from '../dtos/update-blog.dto';
 import { JwtGuard } from '../../shared/guards/jwt.guard';
 import { User } from '../../shared/decorators/user.decorator';
 import { RoleGuard } from '../../shared/guards/role.guard';
+import { Role } from '../../user/schemas/user.schema';
 @ApiTags('Blog')
 @Controller('blog')
 @UseGuards(JwtGuard, new RoleGuard([Role.Admin, Role.CopyRighter]))
